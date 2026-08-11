@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Admin — Campanhas{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <div class="container">
+    <h1>Administração de campanhas</h1>
+    <p class="admin-warning">Página sem autenticação — use apenas na rede local.</p>
+  </div>
+</section>
+
+<section class="container narrow">
+  <h2>Nova campanha</h2>
+  <form class="form" method="post" action="/admin/campanhas">
+    <div class="form-row">
+      <label for="titulo">Título</label>
+      <input type="text" id="titulo" name="titulo" required>
+    </div>
+    <div class="form-row">
+      <label for="resumo">Resumo</label>
+      <textarea id="resumo" name="resumo" rows="2" required></textarea>
+    </div>
+    <div class="form-row">
+      <label for="conteudo">Conteúdo completo (opcional)</label>
+      <textarea id="conteudo" name="conteudo" rows="4"></textarea>
+    </div>
+    <div class="form-grid-2">
+      <div class="form-row">
+        <label for="data_inicio">Início (opcional)</label>
+        <input type="date" id="data_inicio" name="data_inicio">
+      </div>
+      <div class="form-row">
+        <label for="data_fim">Fim (opcional)</label>
+        <input type="date" id="data_fim" name="data_fim">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Adicionar campanha</button>
+  </form>
+</section>
+
+<section class="container">
+  <h2>Campanhas cadastradas</h2>
+  <table class="admin-table">
+    <thead>
+      <tr><th>Título</th><th>Status</th><th>Início</th><th>Fim</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for c in campanhas %}
+      <tr>
+        <td>{{ c.titulo }}</td>
+        <td>{{ "Ativa" if c.ativa else "Inativa" }}</td>
+        <td>{{ c.data_inicio or "—" }}</td>
+        <td>{{ c.data_fim or "—" }}</td>
+        <td>
+          <form method="post" action="/admin/campanhas/{{ c.id }}/toggle">
+            <button type="submit" class="btn btn-small btn-outline">
+              {{ "Desativar" if c.ativa else "Ativar" }}
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}

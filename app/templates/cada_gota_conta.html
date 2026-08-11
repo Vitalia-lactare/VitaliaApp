@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Cada gota conta{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <div class="container">
+    <h1>Cada gota conta</h1>
+    <p>O leite materno é o alimento mais completo para recém-nascidos — e para bebês prematuros,
+       pode ser decisivo.</p>
+  </div>
+</section>
+
+<section class="container narrow accordion">
+  <details open>
+    <summary>Por que o leite materno importa</summary>
+    <p>O colostro e o leite materno contêm anticorpos, enzimas e nutrientes que fortalecem o
+       sistema imunológico do recém-nascido. Para bebês prematuros ou de baixo peso, reduz o
+       risco de infecções graves e melhora significativamente as chances de desenvolvimento saudável.</p>
+  </details>
+
+  <details>
+    <summary>Quem pode doar</summary>
+    <ul>
+      <li>Mães lactantes saudáveis, com produção de leite acima da necessidade do próprio bebê.</li>
+      <li>Não é necessário estar amamentando um recém-nascido — mães com bebês maiores também podem doar.</li>
+      <li>Não use medicamentos contraindicados durante a lactação sem orientação médica.</li>
+      <li>Realize os exames de pré-natal e sorologias em dia, conforme orientação do banco de leite.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Como armazenar o leite até a coleta</summary>
+    <ul>
+      <li>Utilize um recipiente de vidro com tampa plástica, esterilizado por fervura.</li>
+      <li>Identifique o recipiente com data e horário da ordenha.</li>
+      <li>Congele o leite imediatamente após a coleta e mantenha congelado até a retirada.</li>
+      <li>Não complete um recipiente com leite de ordenhas em temperaturas diferentes — deixe esfriar antes de juntar.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>O que acontece com o leite doado</summary>
+    <p>Todo leite recebido passa por análise de qualidade e pasteurização antes de ser liberado
+       para uso hospitalar, seguindo os protocolos da Rede Brasileira de Bancos de Leite Humano.</p>
+  </details>
+</section>
+
+<section class="container narrow cta-block">
+  <h2>Pronta para doar?</h2>
+  <a class="btn btn-primary" href="/seja-doadora">Quero ser doadora</a>
+  <a class="btn btn-outline" href="/localizador">Encontrar banco de leite</a>
+</section>
+
+{% endblock %}

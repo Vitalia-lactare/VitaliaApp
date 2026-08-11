@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}{{ APP_NAME }}{% endblock %} — {{ APP_TAGLINE }}</title>
+<meta name="description" content="{{ APP_TAGLINE }}">
+<meta name="theme-color" content="{{ THEME_COLOR }}">
+
+<link rel="manifest" href="/static/manifest.json">
+<link rel="icon" href="/static/icons/favicon.ico">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon-180.png">
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox" hidden>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M24 4C24 4 10 20 10 30a14 14 0 0 0 28 0C38 20 24 4 24 4Z" fill="var(--color-primary)"/>
+        <path d="M16 30a8 8 0 0 0 8 8" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-name">{{ APP_NAME }}</span>
+    </a>
+
+    <label for="nav-toggle" class="nav-burger" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav class="site-nav">
+      <a href="/">Início</a>
+      <a href="/campanhas">Campanhas</a>
+      <a href="/quem-somos">Quem somos</a>
+      <a href="/cada-gota-conta">Cada gota conta</a>
+      <a href="/localizador">Encontre um banco de leite</a>
+      <a href="/seja-doadora" class="nav-cta">Seja uma doadora</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="brand-name">{{ APP_NAME }}</span>
+      <p>{{ APP_TAGLINE }}</p>
+    </div>
+    <div class="footer-links">
+      <a href="/quem-somos">Quem somos</a>
+      <a href="/cada-gota-conta">Cada gota conta</a>
+      <a href="/localizador">Bancos de leite</a>
+      <a href="/seja-doadora">Seja uma doadora</a>
+    </div>
+    <div class="footer-note">
+      <p>Rede de localização com dados públicos da Rede Brasileira de Bancos de Leite Humano (rBLH/Fiocruz).</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/static/js/pwa-register.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

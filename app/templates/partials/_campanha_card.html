@@ -1,0 +1,13 @@
+<article class="card campanha-card">
+  <div class="card-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M12 2C12 2 5 11 5 16a7 7 0 0 0 14 0C19 11 12 2 12 2Z" fill="var(--color-primary)"/></svg>
+  </div>
+  <h3>{{ c.titulo }}</h3>
+  <p>{{ c.resumo }}</p>
+  {% if c.data_inicio or c.data_fim %}
+    <p class="campanha-datas">
+      {% if c.data_inicio %}{{ c.data_inicio }}{% endif %}
+      {% if c.data_fim %} – {{ c.data_fim }}{% endif %}
+    </p>
+  {% endif %}
+</article>

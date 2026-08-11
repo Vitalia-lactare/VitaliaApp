@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Campanhas{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>Campanhas</h1>
+    <p>Ações permanentes e sazonais para incentivar a doação de leite humano em todo o Brasil.</p>
+  </div>
+</section>
+
+<section class="container">
+  {% if campanhas %}
+    <div class="card-grid">
+      {% for c in campanhas %}
+        {% include "partials/_campanha_card.html" %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Nenhuma campanha ativa no momento.</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}{{ APP_NAME }}{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <h1>Cada gota de leite materno pode salvar uma vida</h1>
+      <p>Conectamos mães doadoras a bancos de leite humano em todo o Brasil, ajudando bebês
+         prematuros internados em UTIs neonatais da rede pública.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/seja-doadora">Quero ser doadora</a>
+        <a class="btn btn-outline" href="/localizador">Encontrar um banco de leite</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <path d="M100 20C100 20 40 90 40 130a60 60 0 0 0 120 0C160 90 100 20 100 20Z" fill="var(--color-primary-light)"/>
+        <path d="M70 130a30 30 0 0 0 30 30" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="container stats-grid">
+    <div class="stat-card">
+      <span class="stat-number">{{ total_bancos }}</span>
+      <span class="stat-label">bancos, centros e postos de coleta cadastrados</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ total_estados }}</span>
+      <span class="stat-label">estados brasileiros com pontos de coleta</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">100%</span>
+      <span class="stat-label">gratuito, seguro e supervisionado por profissionais de saúde</span>
+    </div>
+  </div>
+</section>
+
+<section class="quick-search">
+  <div class="container">
+    <h2>Encontre o banco de leite mais próximo</h2>
+    <form action="/localizador" method="get" class="quick-search-form">
+      <input type="text" name="cidade" placeholder="Digite sua cidade">
+      <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+  </div>
+</section>
+
+{% if campanhas %}
+<section class="campanhas-preview">
+  <div class="container">
+    <h2>Campanhas em destaque</h2>
+    <div class="card-grid">
+      {% for c in campanhas %}
+        {% include "partials/_campanha_card.html" %}
+      {% endfor %}
+    </div>
+    <a href="/campanhas" class="link-more">Ver todas as campanhas →</a>
+  </div>
+</section>
+{% endif %}
+
+<section class="highlights">
+  <div class="container card-grid">
+    <a class="highlight-card" href="/cada-gota-conta">
+      <h3>Cada gota conta</h3>
+      <p>Entenda por que o leite materno é tão importante e como funciona a doação.</p>
+    </a>
+    <a class="highlight-card" href="/localizador">
+      <h3>Localizador nacional</h3>
+      <p>Busque entre centenas de bancos de leite, centros de referência e postos de coleta.</p>
+    </a>
+    <a class="highlight-card" href="/seja-doadora">
+      <h3>Seja uma doadora</h3>
+      <p>Cadastre-se em poucos minutos e receba orientação sobre como doar.</p>
+    </a>
+  </div>
+</section>
+
+{% endblock %}

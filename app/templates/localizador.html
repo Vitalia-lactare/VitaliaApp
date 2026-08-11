@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Encontre um banco de leite{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <div class="container">
+    <h1>Encontre um banco de leite</h1>
+    <p>Busca nacional entre bancos de leite, centros de referência e postos de coleta cadastrados
+       na Rede Brasileira de Bancos de Leite Humano.</p>
+  </div>
+</section>
+
+<section class="container">
+  <form id="form-localizador" class="localizador-form">
+    <div class="form-row">
+      <label for="f-uf">Estado</label>
+      <select id="f-uf" name="uf">
+        <option value="">Todos os estados</option>
+        {% for e in estados %}
+          <option value="{{ e.uf }}">{{ e.estado }} ({{ e.uf }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row autocomplete">
+      <label for="f-cidade">Cidade</label>
+      <input type="text" id="f-cidade" name="cidade" placeholder="Ex: Manaus" autocomplete="off">
+      <ul id="f-cidade-sugestoes" class="autocomplete-list" hidden></ul>
+    </div>
+    <div class="form-row">
+      <label for="f-categoria">Tipo</label>
+      <select id="f-categoria" name="categoria">
+        <option value="">Todos os tipos</option>
+        <option value="Banco de Leite">Banco de Leite</option>
+        <option value="Centro de Referência">Centro de Referência</option>
+        <option value="Posto Coleta">Posto de Coleta</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Buscar</button>
+  </form>
+
+  <p id="localizador-status" class="localizador-status" role="status"></p>
+  <div id="localizador-resultados" class="banco-grid"></div>
+</section>
+
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/localizador.js"></script>
+{% endblock %}
