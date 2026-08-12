@@ -27,6 +27,11 @@ def api_cidades(uf: Optional[str] = None, db: sqlite3.Connection = Depends(get_d
     return {"cidades": repo.distinct_cidades(db, uf=uf)}
 
 
+@router.get("/estados")
+def api_estados(db: sqlite3.Connection = Depends(get_db)):
+    return {"estados": repo.distinct_estados(db)}
+
+
 @router.get("/campanhas")
 def api_campanhas(db: sqlite3.Connection = Depends(get_db)):
     return {"campanhas": repo.list_campanhas_ativas(db)}

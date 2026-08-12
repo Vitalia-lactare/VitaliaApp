@@ -1,0 +1,24 @@
+<section class="wizard-step" data-step="feedback" hidden>
+  <p class="wizard-feedback-note">Nossa equipe entrará em contato em até 24h úteis para o
+     agendamento. Você também receberá um e-mail com as instruções de preparo.</p>
+
+  <h2>O que está achando da nossa experiência?</h2>
+
+  <form id="form-feedback" class="form" novalidate>
+    <div class="star-rating">
+      <input type="radio" id="star5" name="nota" value="5"><label for="star5">★</label>
+      <input type="radio" id="star4" name="nota" value="4"><label for="star4">★</label>
+      <input type="radio" id="star3" name="nota" value="3"><label for="star3">★</label>
+      <input type="radio" id="star2" name="nota" value="2"><label for="star2">★</label>
+      <input type="radio" id="star1" name="nota" value="1"><label for="star1">★</label>
+    </div>
+
+    <div class="form-row">
+      <label for="fb-comentario">Deixe uma observação (opcional)</label>
+      <textarea id="fb-comentario" name="comentario" rows="2"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">Enviar Avaliação</button>
+    <button type="button" class="btn btn-outline btn-block" data-feedback-skip>Ignorar</button>
+  </form>
+</section>

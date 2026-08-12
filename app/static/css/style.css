@@ -345,3 +345,189 @@ a:hover { text-decoration: underline; }
   #nav-toggle:checked ~ .site-header .site-nav { max-height: 420px; }
   .form-grid-2 { grid-template-columns: 1fr; }
 }
+
+/* ---- Portal do Doador (wizard) ---- */
+.wizard-shell { padding: 2rem 0 3rem; }
+.wizard-container { max-width: 560px; }
+
+.wizard-progressbar { margin-bottom: 1.5rem; }
+.wizard-progressbar-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-bg-soft);
+  overflow: hidden;
+}
+.wizard-progressbar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--color-primary);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+.wizard-progressbar-label {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.wizard-step[hidden] { display: none; }
+.wizard-step { text-align: center; }
+.wizard-step .form,
+.wizard-step .quiz-options { text-align: left; }
+
+.wizard-hero-icon { width: 56px; height: 56px; margin: 0 auto 1rem; display: block; }
+.wizard-hero-stats { font-size: 0.9rem; margin: 1.2rem 0; }
+
+.wizard-steps-preview {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 1.4rem;
+  padding: 0;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+.wizard-steps-preview li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  max-width: 80px;
+}
+.wizard-steps-preview span {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-bg-soft);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.video-placeholder {
+  background: var(--color-bg-soft);
+  border-radius: var(--radius);
+  padding: 2.5rem 1rem;
+  margin-bottom: 1rem;
+}
+.video-placeholder svg { width: 64px; height: 64px; }
+.video-placeholder-label { font-weight: 600; color: var(--color-text-muted); margin: 0.6rem 0 0; }
+
+.quiz-question h2 { text-align: center; margin-bottom: 1.4rem; }
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 1.4rem;
+}
+.quiz-option {
+  padding: 0.9rem 1.1rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.quiz-option:hover { border-color: var(--color-primary-light); background: var(--color-bg-soft); }
+.quiz-option.selected { border-color: var(--color-primary); background: var(--color-bg-soft); color: var(--color-primary-dark); }
+
+.wizard-actions { display: flex; gap: 0.7rem; justify-content: center; margin-top: 1rem; }
+.wizard-actions-back-only { justify-content: flex-start; }
+
+.form-hint { font-size: 0.82rem; color: var(--color-text-muted); }
+.banco-card-mini { margin: 0.8rem 0; }
+
+.wizard-success-icon svg { width: 56px; height: 56px; }
+.wizard-success-icon { margin-bottom: 0.5rem; }
+
+.wizard-feedback-note {
+  background: var(--color-bg-soft);
+  border-radius: var(--radius);
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  gap: 0.2rem;
+  margin-bottom: 1rem;
+}
+.star-rating input { position: absolute; opacity: 0; pointer-events: none; }
+.star-rating label {
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--color-border);
+  cursor: pointer;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #f5b301;
+}
+
+.wizard-saiba-mais { margin-top: 2rem; text-align: left; }
+.wizard-saiba-mais > p { text-align: center; font-weight: 600; color: var(--color-text-muted); }
+
+/* ---- Dashboard / dataviz ---- */
+.viz-section { margin: 2.2rem 0; }
+.viz-section h2 { margin-bottom: 0.3rem; }
+.viz-section-hint { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem; }
+
+.viz-bar-chart { display: flex; flex-direction: column; gap: 0.6rem; }
+.viz-bar-row { display: grid; grid-template-columns: 140px 1fr 48px; align-items: center; gap: 0.7rem; }
+.viz-bar-label {
+  font-size: 0.85rem;
+  color: var(--color-text);
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.viz-bar-track {
+  background: var(--color-bg-soft);
+  border-radius: 4px;
+  height: 22px;
+  overflow: hidden;
+}
+.viz-bar-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 0 4px 4px 0;
+  min-width: 3px;
+}
+.viz-bar-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+.viz-empty { color: var(--color-text-muted); font-size: 0.9rem; }
+
+.callout-info {
+  background: var(--color-bg-soft);
+  border-left: 4px solid var(--color-primary-light);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  margin: 1.5rem 0;
+}
+.callout-info strong { color: var(--color-text); }
+
+@media (max-width: 560px) {
+  .viz-bar-row { grid-template-columns: 90px 1fr 40px; }
+  .viz-bar-label { font-size: 0.78rem; }
+}

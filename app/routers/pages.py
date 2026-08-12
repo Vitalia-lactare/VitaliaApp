@@ -11,17 +11,6 @@ from ..templating import templates
 router = APIRouter()
 
 
-@router.get("/")
-def home(request: Request, db: sqlite3.Connection = Depends(get_db)):
-    ctx = {
-        "request": request,
-        "total_bancos": repo.count_bancos(db),
-        "total_estados": repo.count_estados(db),
-        "campanhas": repo.list_campanhas_ativas(db)[:3],
-    }
-    return templates.TemplateResponse(request, "home.html", ctx)
-
-
 @router.get("/campanhas")
 def campanhas(request: Request, db: sqlite3.Connection = Depends(get_db)):
     ctx = {"request": request, "campanhas": repo.list_campanhas_ativas(db)}

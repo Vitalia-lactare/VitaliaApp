@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Portal do Doador{% endblock %}
+{% block content %}
+
+<section class="wizard-shell">
+  <div class="container wizard-container">
+    <div id="wizard-progressbar" class="wizard-progressbar" hidden>
+      <div class="wizard-progressbar-track">
+        <div id="wizard-progressbar-fill" class="wizard-progressbar-fill"></div>
+      </div>
+      <span id="wizard-progressbar-label" class="wizard-progressbar-label"></span>
+    </div>
+
+    <div id="wizard-root" class="wizard">
+      {% include "portal/_boas_vindas.html" %}
+      {% include "portal/_video.html" %}
+      {% include "portal/_quiz_q1.html" %}
+      {% include "portal/_quiz_q2.html" %}
+      {% include "portal/_quiz_q3.html" %}
+      {% include "portal/_quiz_q4.html" %}
+      {% include "portal/_quiz_q5.html" %}
+      {% include "portal/_quiz_q6.html" %}
+      {% include "portal/_cadastro.html" %}
+      {% include "portal/_confirmacao.html" %}
+      {% include "portal/_agendamento.html" %}
+      {% include "portal/_feedback.html" %}
+      {% include "portal/_fechamento.html" %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/portal.js"></script>
+{% endblock %}

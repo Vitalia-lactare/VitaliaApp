@@ -10,13 +10,14 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import APP_DIR, APP_NAME
-from .routers import admin, api, pages
+from .routers import admin, api, pages, portal
 from scripts.init_db import init_db
 
 app = FastAPI(title=APP_NAME)
 
 app.mount("/static", StaticFiles(directory=str(APP_DIR / "static")), name="static")
 
+app.include_router(portal.router)
 app.include_router(pages.router)
 app.include_router(api.router)
 app.include_router(admin.router)

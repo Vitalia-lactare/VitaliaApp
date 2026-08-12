@@ -1,0 +1,33 @@
+<section class="wizard-step" data-step="agendamento" hidden>
+  <h2>Quer agendar a coleta?</h2>
+  <p>Podemos buscar o leite na sua casa. Se preferir, você pode pular essa etapa e
+     combinar depois pelo telefone do ponto de coleta.</p>
+
+  <form id="form-agendamento" class="form" novalidate>
+    <div class="form-row">
+      <label for="ag-endereco">Endereço para coleta</label>
+      <textarea id="ag-endereco" name="endereco_coleta" rows="2" required minlength="3"
+                placeholder="Rua, número, bairro, complemento"></textarea>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="form-row">
+        <label for="ag-data">Data preferida (opcional)</label>
+        <input type="date" id="ag-data" name="data_preferida">
+      </div>
+      <div class="form-row">
+        <label for="ag-periodo">Período (opcional)</label>
+        <select id="ag-periodo" name="periodo">
+          <option value="">Sem preferência</option>
+          <option value="manha">Manhã</option>
+          <option value="tarde">Tarde</option>
+          <option value="noite">Noite</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">Solicitar coleta</button>
+    <button type="button" class="btn btn-outline btn-block" data-agendamento-skip>Pular por enquanto</button>
+    <p id="ag-feedback" class="form-feedback" role="status"></p>
+  </form>
+</section>

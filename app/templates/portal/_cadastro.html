@@ -1,0 +1,67 @@
+<section class="wizard-step" data-step="cadastro" hidden>
+  <h2>Agora, seu cadastro</h2>
+  <p>Seus dados são usados exclusivamente para conectar você ao banco de leite mais
+     próximo e nunca são compartilhados com terceiros.</p>
+
+  <form id="form-cadastro" class="form" novalidate>
+    <div class="form-row">
+      <label for="cad-nome">Nome completo</label>
+      <input type="text" id="cad-nome" name="nome" required minlength="2">
+    </div>
+
+    <div class="form-row">
+      <label for="cad-email">E-mail</label>
+      <input type="email" id="cad-email" name="email" required>
+    </div>
+
+    <div class="form-row">
+      <label for="cad-telefone">Telefone / WhatsApp</label>
+      <input type="tel" id="cad-telefone" name="telefone" required placeholder="(11) 91234-5678">
+    </div>
+
+    <div class="form-row">
+      <label for="cad-cep">CEP</label>
+      <input type="text" id="cad-cep" name="cep" required inputmode="numeric" placeholder="00000-000" maxlength="9">
+      <span id="cad-cep-status" class="form-hint"></span>
+    </div>
+
+    <div id="cad-banco-encontrado" class="banco-card banco-card-mini" hidden></div>
+
+    <div id="cad-manual" class="form-grid-2" hidden>
+      <div class="form-row">
+        <label for="cad-uf">Estado</label>
+        <select id="cad-uf" name="uf_manual"></select>
+      </div>
+      <div class="form-row autocomplete">
+        <label for="cad-cidade">Cidade</label>
+        <input type="text" id="cad-cidade" name="cidade_manual" autocomplete="off">
+        <ul id="cad-cidade-sugestoes" class="autocomplete-list" hidden></ul>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label for="cad-bebe-nascimento">Data de nascimento do bebê (opcional)</label>
+      <input type="date" id="cad-bebe-nascimento" name="bebe_nascimento">
+    </div>
+
+    <div class="form-row">
+      <label for="cad-mensagem">Mensagem (opcional)</label>
+      <textarea id="cad-mensagem" name="mensagem" rows="2"></textarea>
+    </div>
+
+    <div class="form-row form-row-checkbox">
+      <label>
+        <input type="checkbox" id="cad-lgpd" name="lgpd" required>
+        Autorizo o uso dos meus dados exclusivamente para me conectar a um banco de
+        leite humano, conforme a LGPD.
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">Concluir cadastro</button>
+    <p id="cad-feedback" class="form-feedback" role="status"></p>
+  </form>
+
+  <div class="wizard-actions wizard-actions-back-only">
+    <button type="button" class="btn btn-outline" data-wizard-back>Voltar</button>
+  </div>
+</section>

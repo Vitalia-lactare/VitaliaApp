@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Admin — Dashboard{% endblock %}
+
+{% macro bar_chart(items, label_key, value_key, max_val) %}
+  {% if items %}
+  <div class="viz-bar-chart">
+    {% for item in items %}
+    <div class="viz-bar-row">
+      <span class="viz-bar-label">{{ item[label_key] }}</span>
+      <div class="viz-bar-track">
+        <div class="viz-bar-fill" style="width: {{ (item[value_key] / max_val * 100) if max_val else 0 }}%"></div>
+      </div>
+      <span class="viz-bar-value">{{ item[value_key] }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="viz-empty">Ainda sem dados suficientes.</p>
+  {% endif %}
+{% endmacro %}
+
+{% block content %}
+
+<section class="page-header">
+  <div class="container">
+    <h1>Dashboard — Portal do Doador</h1>
+    <p class="admin-warning">Página sem autenticação — use apenas na rede local.</p>
+  </div>
+</section>
+
+<section class="container">
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-number">{{ total_sessoes }}</span>
+      <span class="stat-label">sessões iniciadas</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ total_doadoras_portal }}</span>
+      <span class="stat-label">cadastros pelo portal</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ quiz_conclusao.taxa_pct }}%</span>
+      <span class="stat-label">taxa de conclusão do quiz</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ conversao.taxa_geral_pct }}%</span>
+      <span class="stat-label">taxa de conversão (sessão → cadastro)</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ retorno.taxa_retorno_pct }}%</span>
+      <span class="stat-label">doadoras recorrentes (já doaram antes)</span>
+    </div>
+  </div>
+
+  <div class="viz-section">
+    <h2>Funil por evento</h2>
+    <p class="viz-section-hint">Sessões distintas que geraram cada evento, do mais ao menos frequente.</p>
+    {{ bar_chart(funil, "evento", "sessoes", funil_max) }}
+  </div>
+
+  <div class="viz-section">
+    <h2>Abandono no quiz</h2>
+    <p class="viz-section-hint">Sessões que chegaram em cada pergunta (q1 a q6) — a queda entre etapas mostra onde as pessoas desistem.</p>
+    {{ bar_chart(quiz_dropoff, "etapa", "sessoes", quiz_dropoff_max) }}
+  </div>
+
+  <div class="viz-section">
+    <h2>Motivos de alerta no quiz</h2>
+    <p class="viz-section-hint">Respostas que geram encaminhamento diferenciado pela equipe — não bloqueiam o cadastro.</p>
+    {{ bar_chart(alertas, "alerta", "total", alertas_max) }}
+  </div>
+
+  <div class="viz-section">
+    <h2>Cadastros por estado</h2>
+    {{ bar_chart(cadastros_uf, "uf", "total", cadastros_uf_max) }}
+  </div>
+
+  <div class="viz-section">
+    <h2>Horário de acesso (aproximado, BRT)</h2>
+    <p class="viz-section-hint">Sessões distintas por hora do dia. Aproximação com UTC-3 fixo — pode não refletir exatamente estados como AM/AC.</p>
+    {{ bar_chart(acessos_hora, "hora", "sessoes", acessos_hora_max) }}
+  </div>
+
+  <div class="callout-info">
+    <strong>Fora do escopo desta versão:</strong> "Top Bairros" e mapa de calor por CEP
+    (não coletamos bairro, nem há biblioteca de geocoding/mapas no projeto) e idade
+    média das doadoras (só temos a data de nascimento do bebê, não da doadora). A taxa
+    de retorno acima é o substituto disponível para acompanhar engajamento recorrente.
+  </div>
+
+</section>
+
+{% endblock %}

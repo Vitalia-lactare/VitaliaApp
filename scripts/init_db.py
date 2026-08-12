@@ -49,7 +49,58 @@ CREATE TABLE IF NOT EXISTS contatos (
   mensagem  TEXT NOT NULL,
   criado_em TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS triagens (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  sessao_id       TEXT NOT NULL,
+  doadora_id      INTEGER REFERENCES doadoras(id),
+  amamentando     TEXT NOT NULL CHECK (amamentando IN ('sim_atualmente','ainda_nao','nao_mais')),
+  idade_bebe      TEXT NOT NULL CHECK (idade_bebe IN ('menos_1_mes','1_a_3_meses','3_a_6_meses','6_a_12_meses','mais_12_meses','nao_se_aplica')),
+  usa_medicamento INTEGER NOT NULL CHECK (usa_medicamento IN (0,1)),
+  fumante         INTEGER NOT NULL CHECK (fumante IN (0,1)),
+  exame_recente   INTEGER NOT NULL CHECK (exame_recente IN (0,1)),
+  ja_doou_antes   INTEGER NOT NULL CHECK (ja_doou_antes IN (0,1)),
+  alertas         TEXT,
+  criado_em       TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_triagens_sessao  ON triagens(sessao_id);
+CREATE INDEX IF NOT EXISTS idx_triagens_doadora ON triagens(doadora_id);
+
+CREATE TABLE IF NOT EXISTS eventos_funil (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  sessao_id   TEXT NOT NULL,
+  evento      TEXT NOT NULL,
+  etapa       TEXT,
+  metadata    TEXT,
+  doadora_id  INTEGER REFERENCES doadoras(id),
+  criado_em   TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_eventos_sessao    ON eventos_funil(sessao_id);
+CREATE INDEX IF NOT EXISTS idx_eventos_evento    ON eventos_funil(evento);
+CREATE INDEX IF NOT EXISTS idx_eventos_criado_em ON eventos_funil(criado_em);
 """
+
+DOADORA_NEW_COLUMNS = {
+    "cep": "TEXT",
+    "sessao_id": "TEXT",
+    "triagem_id": "INTEGER REFERENCES triagens(id)",
+    "endereco_coleta": "TEXT",
+    "agendamento_solicitado": "INTEGER NOT NULL DEFAULT 0",
+    "agendamento_data_preferida": "TEXT",
+    "agendamento_periodo": "TEXT",
+    "feedback_nota": "INTEGER",
+    "feedback_comentario": "TEXT",
+}
+
+
+def _ensure_doadora_columns(conn: sqlite3.Connection) -> None:
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(doadoras)").fetchall()}
+    for col, coldef in DOADORA_NEW_COLUMNS.items():
+        if col not in existing:
+            conn.execute(f"ALTER TABLE doadoras ADD COLUMN {col} {coldef}")
+    conn.commit()
 
 
 def init_db() -> None:
@@ -73,6 +124,8 @@ def init_db() -> None:
 
         conn.executescript(SCHEMA_SQL)
         conn.commit()
+
+        _ensure_doadora_columns(conn)
 
         seed_if_empty(conn)
 
