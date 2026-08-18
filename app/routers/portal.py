@@ -28,6 +28,7 @@ def portal_wizard(request: Request, db: sqlite3.Connection = Depends(get_db)):
         "request": request,
         "total_bancos": repo.count_bancos(db),
         "total_estados": repo.count_estados(db),
+        "estados": repo.distinct_estados(db),
     }
     return templates.TemplateResponse(request, "portal.html", ctx)
 

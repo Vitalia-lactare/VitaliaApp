@@ -167,18 +167,6 @@
     }
   }
 
-  async function loadEstados() {
-    try {
-      const resp = await fetch("/api/estados");
-      const data = await resp.json();
-      ufSelect.innerHTML = '<option value="">Selecione</option>' + (data.estados || [])
-        .map((e) => `<option value="${escapeHtml(e.uf)}">${escapeHtml(e.estado)} (${escapeHtml(e.uf)})</option>`)
-        .join("");
-    } catch (e) {
-      ufSelect.innerHTML = '<option value="">Não foi possível carregar</option>';
-    }
-  }
-
   function renderCidadeSugestoes(query) {
     const q = normalize(query);
     if (!q) { cidadeList.hidden = true; cidadeList.innerHTML = ""; return; }
@@ -210,11 +198,9 @@
     });
   }
 
-  let estadosLoaded = false;
   function showManualFallback() {
     manualBlock.hidden = false;
     bancoEncontradoEl.hidden = true;
-    if (!estadosLoaded) { loadEstados(); estadosLoaded = true; }
   }
 
   if (cepInput) {

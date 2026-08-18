@@ -30,7 +30,12 @@
     <div id="cad-manual" class="form-grid-2" hidden>
       <div class="form-row">
         <label for="cad-uf">Estado</label>
-        <select id="cad-uf" name="uf_manual"></select>
+        <select id="cad-uf" name="uf_manual">
+          <option value="">Selecione</option>
+          {% for e in estados %}
+            <option value="{{ e.uf }}">{{ e.estado }} ({{ e.uf }})</option>
+          {% endfor %}
+        </select>
       </div>
       <div class="form-row autocomplete">
         <label for="cad-cidade">Cidade</label>

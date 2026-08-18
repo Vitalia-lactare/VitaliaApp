@@ -6,7 +6,8 @@ from fastapi.responses import JSONResponse
 
 from .. import repo
 from ..db import get_db
-from ..models import ContatoIn, DoadoraIn
+from ..models import ChatIn, ContatoIn
+from ..services import chat as chat_service
 
 router = APIRouter(prefix="/api")
 
@@ -37,19 +38,14 @@ def api_campanhas(db: sqlite3.Connection = Depends(get_db)):
     return {"campanhas": repo.list_campanhas_ativas(db)}
 
 
-@router.post("/doadoras", status_code=201)
-def api_doadoras(payload: DoadoraIn, db: sqlite3.Connection = Depends(get_db)):
-    data = payload.model_dump()
-    data["bebe_nascimento"] = (
-        data["bebe_nascimento"].isoformat() if data["bebe_nascimento"] else None
-    )
-    data["ja_doou_antes"] = 1 if data["ja_doou_antes"] else 0
-    data["uf"] = data["uf"].upper()
-    novo_id = repo.insert_doadora(db, data)
-    return JSONResponse(status_code=201, content={"ok": True, "id": novo_id})
-
-
 @router.post("/contatos", status_code=201)
 def api_contatos(payload: ContatoIn, db: sqlite3.Connection = Depends(get_db)):
     novo_id = repo.insert_contato(db, payload.model_dump())
     return JSONResponse(status_code=201, content={"ok": True, "id": novo_id})
+
+
+@router.post("/chat")
+def api_chat(payload: ChatIn):
+    historico = [m.model_dump() for m in payload.historico]
+    resposta = chat_service.ask(payload.mensagem, historico)
+    return {"resposta": resposta}

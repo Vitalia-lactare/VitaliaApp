@@ -2,6 +2,7 @@ import json
 import re
 import sqlite3
 from collections import Counter
+from datetime import date, timedelta
 from typing import Optional
 
 
@@ -214,25 +215,6 @@ def toggle_campanha_ativa(conn: sqlite3.Connection, campanha_id: int) -> None:
         "UPDATE campanhas SET ativa = 1 - ativa WHERE id = ?", (campanha_id,)
     )
     conn.commit()
-
-
-def insert_doadora(conn: sqlite3.Connection, data: dict) -> int:
-    if not data.get("banco_leite_id"):
-        data["banco_leite_id"] = match_banco_leite_id(conn, data["uf"], data["cidade"])
-
-    cur = conn.execute(
-        """
-        INSERT INTO doadoras
-            (nome, email, telefone, cidade, uf, bebe_nascimento,
-             ja_doou_antes, mensagem, banco_leite_id, status)
-        VALUES
-            (:nome, :email, :telefone, :cidade, :uf, :bebe_nascimento,
-             :ja_doou_antes, :mensagem, :banco_leite_id, 'novo')
-        """,
-        data,
-    )
-    conn.commit()
-    return cur.lastrowid
 
 
 def insert_contato(conn: sqlite3.Connection, data: dict) -> int:
@@ -464,3 +446,128 @@ def count_doadoras_portal(conn: sqlite3.Connection) -> int:
     return conn.execute(
         "SELECT COUNT(*) FROM doadoras WHERE sessao_id IS NOT NULL"
     ).fetchone()[0]
+
+
+def count_agendamentos_solicitados(conn: sqlite3.Connection) -> int:
+    return conn.execute(
+        "SELECT COUNT(*) FROM doadoras WHERE agendamento_solicitado = 1"
+    ).fetchone()[0]
+
+
+def cadastros_por_mes(conn: sqlite3.Connection) -> dict:
+    row = conn.execute(
+        """
+        SELECT
+          SUM(CASE WHEN strftime('%Y-%m', criado_em) = strftime('%Y-%m', 'now') THEN 1 ELSE 0 END) AS atual,
+          SUM(CASE WHEN strftime('%Y-%m', criado_em) = strftime('%Y-%m', 'now', '-1 month') THEN 1 ELSE 0 END) AS anterior
+        FROM doadoras WHERE sessao_id IS NOT NULL
+        """
+    ).fetchone()
+    return {"atual": row["atual"] or 0, "anterior": row["anterior"] or 0}
+
+
+def agendamentos_por_mes(conn: sqlite3.Connection) -> dict:
+    """Mes do agendamento aproximado pelo criado_em do cadastro (nao ha
+    timestamp proprio para o momento em que o agendamento foi solicitado)."""
+    row = conn.execute(
+        """
+        SELECT
+          SUM(CASE WHEN strftime('%Y-%m', criado_em) = strftime('%Y-%m', 'now') THEN 1 ELSE 0 END) AS atual,
+          SUM(CASE WHEN strftime('%Y-%m', criado_em) = strftime('%Y-%m', 'now', '-1 month') THEN 1 ELSE 0 END) AS anterior
+        FROM doadoras WHERE agendamento_solicitado = 1
+        """
+    ).fetchone()
+    return {"atual": row["atual"] or 0, "anterior": row["anterior"] or 0}
+
+
+def _conversao_do_mes(conn: sqlite3.Connection, offset: str) -> Optional[float]:
+    row = conn.execute(
+        """
+        SELECT
+          COUNT(DISTINCT sessao_id) AS sessoes,
+          COUNT(DISTINCT CASE WHEN evento = 'cadastro_submitted' THEN sessao_id END) AS cadastros
+        FROM eventos_funil
+        WHERE strftime('%Y-%m', criado_em) = strftime('%Y-%m', 'now', ?)
+        """,
+        (offset,),
+    ).fetchone()
+    if not row["sessoes"]:
+        return None
+    return round(100 * row["cadastros"] / row["sessoes"], 1)
+
+
+def conversao_por_mes(conn: sqlite3.Connection) -> dict:
+    return {
+        "atual": _conversao_do_mes(conn, "0 months"),
+        "anterior": _conversao_do_mes(conn, "-1 months"),
+    }
+
+
+def _avaliacao_do_mes(conn: sqlite3.Connection, offset: str) -> Optional[float]:
+    row = conn.execute(
+        """
+        SELECT AVG(feedback_nota) AS media
+        FROM doadoras
+        WHERE feedback_nota IS NOT NULL
+          AND strftime('%Y-%m', criado_em) = strftime('%Y-%m', 'now', ?)
+        """,
+        (offset,),
+    ).fetchone()
+    return round(row["media"], 1) if row["media"] is not None else None
+
+
+def avaliacao_por_mes(conn: sqlite3.Connection) -> dict:
+    return {
+        "atual": _avaliacao_do_mes(conn, "0 months"),
+        "anterior": _avaliacao_do_mes(conn, "-1 months"),
+    }
+
+
+def avaliacoes_breakdown(conn: sqlite3.Connection) -> dict:
+    rows = conn.execute(
+        """
+        SELECT feedback_nota AS nota, COUNT(*) AS total
+        FROM doadoras
+        WHERE feedback_nota IS NOT NULL
+        GROUP BY feedback_nota
+        """
+    ).fetchall()
+    por_nota = {r["nota"]: r["total"] for r in rows}
+    total_respostas = sum(por_nota.values())
+    media_row = conn.execute(
+        "SELECT AVG(feedback_nota) AS media FROM doadoras WHERE feedback_nota IS NOT NULL"
+    ).fetchone()
+    breakdown = [
+        {
+            "nota": nota,
+            "total": por_nota.get(nota, 0),
+            "pct": round(100 * por_nota.get(nota, 0) / total_respostas, 0) if total_respostas else 0,
+        }
+        for nota in (5, 4, 3, 2, 1)
+    ]
+    return {
+        "media": round(media_row["media"], 1) if media_row["media"] is not None else None,
+        "total_respostas": total_respostas,
+        "breakdown": breakdown,
+    }
+
+
+def cadastros_por_dia(conn: sqlite3.Connection, dias: int = 14) -> list[dict]:
+    rows = conn.execute(
+        """
+        SELECT date(criado_em) AS dia, COUNT(*) AS total
+        FROM doadoras
+        WHERE sessao_id IS NOT NULL AND date(criado_em) >= date('now', ?)
+        GROUP BY dia
+        """,
+        (f"-{dias - 1} days",),
+    ).fetchall()
+    por_dia = {r["dia"]: r["total"] for r in rows}
+    hoje = date.today()
+    return [
+        {
+            "dia": (hoje - timedelta(days=i)).isoformat(),
+            "total": por_dia.get((hoje - timedelta(days=i)).isoformat(), 0),
+        }
+        for i in range(dias - 1, -1, -1)
+    ]

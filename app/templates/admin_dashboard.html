@@ -1,11 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Admin — Dashboard{% endblock %}
 
+{% macro delta_chip(delta) %}
+  {% if delta %}
+    <span class="delta-chip {{ 'delta-up' if delta.positivo else 'delta-down' }}">
+      {{ "▲" if delta.positivo else "▼" }} {{ delta.texto }}
+    </span>
+  {% else %}
+    <span class="delta-chip delta-empty">sem dados do mês anterior</span>
+  {% endif %}
+{% endmacro %}
+
 {% macro bar_chart(items, label_key, value_key, max_val) %}
   {% if items %}
   <div class="viz-bar-chart">
     {% for item in items %}
-    <div class="viz-bar-row">
+    <div class="viz-bar-row" title="{{ item[label_key] }}: {{ item[value_key] }}">
       <span class="viz-bar-label">{{ item[label_key] }}</span>
       <div class="viz-bar-track">
         <div class="viz-bar-fill" style="width: {{ (item[value_key] / max_val * 100) if max_val else 0 }}%"></div>
@@ -19,74 +29,192 @@
   {% endif %}
 {% endmacro %}
 
+{% macro hour_chart(items, max_val) %}
+  {% if items %}
+  <div class="viz-column-chart">
+    {% for item in items %}
+    <div class="viz-column" title="{{ '%02d'|format(item.hora) }}h — {{ item.sessoes }} sessões">
+      <span class="viz-column-value">{{ item.sessoes if (max_val and item.sessoes == max_val) else "" }}</span>
+      <div class="viz-column-track">
+        <div class="viz-column-fill" style="height: {{ (item.sessoes / max_val * 100) if max_val else 0 }}%"></div>
+      </div>
+      <span class="viz-column-label">{{ "%02d"|format(item.hora) }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="viz-empty">Ainda sem dados suficientes.</p>
+  {% endif %}
+{% endmacro %}
+
+{% macro day_chart(items, max_val) %}
+  {% if items %}
+  <div class="viz-column-chart">
+    {% for item in items %}
+    <div class="viz-column" title="{{ item.dia }} — {{ item.total }} cadastros">
+      <span class="viz-column-value">{{ item.total if (max_val and item.total == max_val) else "" }}</span>
+      <div class="viz-column-track">
+        <div class="viz-column-fill" style="height: {{ (item.total / max_val * 100) if max_val else 0 }}%"></div>
+      </div>
+      <span class="viz-column-label">{{ item.dia[8:10] }}/{{ item.dia[5:7] }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="viz-empty">Ainda sem dados suficientes.</p>
+  {% endif %}
+{% endmacro %}
+
 {% block content %}
 
 <section class="page-header">
   <div class="container">
     <h1>Dashboard — Portal do Doador</h1>
-    <p class="admin-warning">Página sem autenticação — use apenas na rede local.</p>
+    <a href="/admin/logout">Sair</a>
   </div>
 </section>
 
 <section class="container">
 
-  <div class="stats-grid">
-    <div class="stat-card">
-      <span class="stat-number">{{ total_sessoes }}</span>
-      <span class="stat-label">sessões iniciadas</span>
+  <div class="kpi-row">
+    <div class="dash-card kpi-card">
+      <span class="kpi-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </span>
+      <span class="kpi-label">Cadastradas</span>
+      <span class="kpi-value">{{ total_doadoras_portal }}</span>
+      {{ delta_chip(cadastros_delta) }}
     </div>
-    <div class="stat-card">
-      <span class="stat-number">{{ total_doadoras_portal }}</span>
-      <span class="stat-label">cadastros pelo portal</span>
+
+    <div class="dash-card kpi-card">
+      <span class="kpi-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></svg>
+      </span>
+      <span class="kpi-label">Agendamentos solicitados</span>
+      <span class="kpi-value">{{ total_agendamentos }}</span>
+      {{ delta_chip(agendamentos_delta) }}
     </div>
-    <div class="stat-card">
-      <span class="stat-number">{{ quiz_conclusao.taxa_pct }}%</span>
-      <span class="stat-label">taxa de conclusão do quiz</span>
+
+    <div class="dash-card kpi-card">
+      <span class="kpi-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      </span>
+      <span class="kpi-label">Taxa de conversão</span>
+      <span class="kpi-value">{{ conversao.taxa_geral_pct }}%</span>
+      {{ delta_chip(conversao_delta) }}
     </div>
-    <div class="stat-card">
-      <span class="stat-number">{{ conversao.taxa_geral_pct }}%</span>
-      <span class="stat-label">taxa de conversão (sessão → cadastro)</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-number">{{ retorno.taxa_retorno_pct }}%</span>
-      <span class="stat-label">doadoras recorrentes (já doaram antes)</span>
+
+    <div class="dash-card kpi-card">
+      <span class="kpi-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.7 7.1-.7z"/></svg>
+      </span>
+      <span class="kpi-label">Avaliação média</span>
+      <span class="kpi-value">{{ avaliacoes.media if avaliacoes.media is not none else "—" }}</span>
+      {{ delta_chip(avaliacao_delta) }}
     </div>
   </div>
 
-  <div class="viz-section">
-    <h2>Funil por evento</h2>
+  <div class="dash-grid">
+    <div class="dash-card">
+      <h2>Cadastros por estado</h2>
+      {% if cadastros_uf %}
+      <div class="rank-list">
+        {% for item in cadastros_uf %}
+        <div class="rank-row" title="{{ item.uf }}: {{ item.total }}">
+          <span class="rank-bullet"></span>
+          <span class="rank-label">{{ item.uf }}</span>
+          <div class="rank-track">
+            <div class="rank-fill" style="width: {{ (item.total / cadastros_uf_max * 100) if cadastros_uf_max else 0 }}%"></div>
+          </div>
+          <span class="rank-value">{{ item.total }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="viz-empty">Ainda sem dados suficientes.</p>
+      {% endif %}
+    </div>
+
+    <div class="dash-card">
+      <h2>Funil de conversão</h2>
+      <div class="funnel-stages">
+        {% for stage in funil_principal %}
+        <div class="funnel-stage">
+          <span class="funnel-stage-label">{{ stage.label }}</span>
+          <div class="funnel-stage-track">
+            <div class="funnel-stage-fill {{ stage.cor }}" style="width: {{ (stage.valor / funil_principal_max * 100) if funil_principal_max else 0 }}%">
+              <span class="funnel-stage-value">{{ stage.valor }}</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-card">
+    <h2>Avaliação das doadoras</h2>
+    {% if avaliacoes.total_respostas %}
+    <div class="rating-summary">
+      <span class="rating-star" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.7 7.1-.7z"/></svg>
+      </span>
+      <span class="rating-value">{{ avaliacoes.media }}</span>
+      <span class="rating-meta">média · {{ avaliacoes.total_respostas }} respostas</span>
+    </div>
+    <div class="rating-breakdown">
+      {% for row in avaliacoes.breakdown %}
+      <div class="rating-row" title="{{ row.nota }} estrelas: {{ row.total }} ({{ row.pct|int }}%)">
+        <span class="rating-row-label">{{ row.nota }}</span>
+        <div class="rank-track">
+          <div class="rank-fill" style="width: {{ row.pct }}%"></div>
+        </div>
+        <span class="rating-row-pct">{{ row.pct|int }}%</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="viz-empty">Ainda sem avaliações suficientes.</p>
+    {% endif %}
+  </div>
+
+  <div class="dash-card">
+    <h2>Cadastros nos últimos 14 dias</h2>
+    {{ day_chart(cadastros_dia, cadastros_dia_max) }}
+  </div>
+
+  <div class="dash-card">
+    <h2>Horário de acesso (aproximado, BRT)</h2>
+    <p class="viz-section-hint">Sessões distintas por hora do dia. Aproximação com UTC-3 fixo — pode não refletir exatamente estados como AM/AC.</p>
+    {{ hour_chart(acessos_hora, acessos_hora_max) }}
+  </div>
+
+  <h2 class="dash-section-title">Detalhamento</h2>
+
+  <div class="dash-card">
+    <h3>Funil por evento</h3>
     <p class="viz-section-hint">Sessões distintas que geraram cada evento, do mais ao menos frequente.</p>
     {{ bar_chart(funil, "evento", "sessoes", funil_max) }}
   </div>
 
-  <div class="viz-section">
-    <h2>Abandono no quiz</h2>
-    <p class="viz-section-hint">Sessões que chegaram em cada pergunta (q1 a q6) — a queda entre etapas mostra onde as pessoas desistem.</p>
+  <div class="dash-card">
+    <h3>Abandono no quiz</h3>
+    <p class="viz-section-hint">Sessões que chegaram em cada pergunta (1 a 6) — a queda entre etapas mostra onde as pessoas desistem.</p>
     {{ bar_chart(quiz_dropoff, "etapa", "sessoes", quiz_dropoff_max) }}
   </div>
 
-  <div class="viz-section">
-    <h2>Motivos de alerta no quiz</h2>
+  <div class="dash-card">
+    <h3>Motivos de alerta no quiz</h3>
     <p class="viz-section-hint">Respostas que geram encaminhamento diferenciado pela equipe — não bloqueiam o cadastro.</p>
     {{ bar_chart(alertas, "alerta", "total", alertas_max) }}
-  </div>
-
-  <div class="viz-section">
-    <h2>Cadastros por estado</h2>
-    {{ bar_chart(cadastros_uf, "uf", "total", cadastros_uf_max) }}
-  </div>
-
-  <div class="viz-section">
-    <h2>Horário de acesso (aproximado, BRT)</h2>
-    <p class="viz-section-hint">Sessões distintas por hora do dia. Aproximação com UTC-3 fixo — pode não refletir exatamente estados como AM/AC.</p>
-    {{ bar_chart(acessos_hora, "hora", "sessoes", acessos_hora_max) }}
   </div>
 
   <div class="callout-info">
     <strong>Fora do escopo desta versão:</strong> "Top Bairros" e mapa de calor por CEP
     (não coletamos bairro, nem há biblioteca de geocoding/mapas no projeto) e idade
     média das doadoras (só temos a data de nascimento do bebê, não da doadora). A taxa
-    de retorno acima é o substituto disponível para acompanhar engajamento recorrente.
+    de retorno ({{ retorno.taxa_retorno_pct }}% de doadoras recorrentes) é o substituto
+    disponível para acompanhar engajamento recorrente.
   </div>
 
 </section>

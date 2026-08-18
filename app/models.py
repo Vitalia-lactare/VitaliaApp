@@ -70,3 +70,13 @@ class FeedbackIn(BaseModel):
     sessao_id: constr(min_length=8)
     nota: int = Field(ge=1, le=5)
     comentario: Optional[str] = None
+
+
+class ChatMessageIn(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str = Field(min_length=1, max_length=2000)
+
+
+class ChatIn(BaseModel):
+    mensagem: str = Field(min_length=1, max_length=1000)
+    historico: list[ChatMessageIn] = Field(default_factory=list, max_length=20)

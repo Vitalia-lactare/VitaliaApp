@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Login administrador{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <div class="container">
+    <h1>Área do administrador</h1>
+    <p>Acesso restrito à equipe Vitalia.</p>
+  </div>
+</section>
+
+<section class="container narrow">
+  {% if erro %}
+    <div class="alert alert-error">Usuário ou senha inválidos.</div>
+  {% endif %}
+
+  <form class="form" method="post" action="/admin/login" novalidate>
+    <div class="form-row">
+      <label for="usuario">Usuário</label>
+      <input type="text" id="usuario" name="usuario" required autofocus>
+    </div>
+
+    <div class="form-row">
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" name="senha" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+  </form>
+</section>
+
+{% endblock %}

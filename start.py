@@ -42,6 +42,8 @@ def print_access_info(lan_ip: str) -> None:
         qr.print_ascii(invert=True)
     except ImportError:
         print(" (dica: instale 'qrcode[pil]' para ver um QR code aqui)")
+    except UnicodeEncodeError:
+        pass
 
 
 def main() -> None:
