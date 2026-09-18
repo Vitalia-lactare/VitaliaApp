@@ -66,7 +66,7 @@ a:hover { text-decoration: underline; }
 }
 .brand { display: flex; align-items: center; gap: 0.5rem; }
 .brand:hover { text-decoration: none; }
-.brand-mark { width: 30px; height: 30px; }
+.brand-mark { width: auto; height: 40px; object-fit: contain; }
 .brand-name { font-weight: 700; font-size: 1.25rem; color: var(--color-primary-dark); }
 
 .site-nav {
@@ -153,7 +153,7 @@ a:hover { text-decoration: underline; }
   padding: 1.4rem;
   box-shadow: var(--shadow);
 }
-.card-icon svg { width: 32px; height: 32px; margin-bottom: 0.6rem; }
+.card-icon img { width: auto; height: 32px; margin-bottom: 0.6rem; object-fit: contain; }
 .campanha-datas { font-size: 0.85rem; color: var(--color-primary); font-weight: 600; }
 
 .highlights { padding: 1rem 0 3rem; }
@@ -386,7 +386,7 @@ a:hover { text-decoration: underline; }
 .wizard-step .form,
 .wizard-step .quiz-options { text-align: left; }
 
-.wizard-hero-icon { width: 56px; height: 56px; margin: 0 auto 1rem; display: block; }
+.wizard-hero-icon { width: auto; height: 56px; margin: 0 auto 1rem; display: block; object-fit: contain; }
 .wizard-hero-stats { font-size: 0.9rem; margin: 1.2rem 0; }
 
 .wizard-steps-preview {
