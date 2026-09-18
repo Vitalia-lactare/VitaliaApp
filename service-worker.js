@@ -3,7 +3,6 @@ const CACHE_NAME = "vitalia-shell-v1";
 const APP_SHELL = [
   "/",
   "/campanhas",
-  "/quem-somos",
   "/cada-gota-conta",
   "/seja-doadora",
   "/localizador",

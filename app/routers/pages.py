@@ -15,11 +15,6 @@ def campanhas(request: Request, db: sqlite3.Connection = Depends(get_db)):
     return templates.TemplateResponse(request, "campanhas.html", ctx)
 
 
-@router.get("/quem-somos")
-def quem_somos(request: Request):
-    return templates.TemplateResponse(request, "quem_somos.html", {})
-
-
 @router.get("/cada-gota-conta")
 def cada_gota_conta(request: Request):
     return templates.TemplateResponse(request, "cada_gota_conta.html", {})
