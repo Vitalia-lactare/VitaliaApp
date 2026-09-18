@@ -7,3 +7,4 @@ qrcode[pil]
 httpx
 itsdangerous
 anthropic
+python-dotenv

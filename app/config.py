@@ -1,9 +1,13 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent  # .../lactare_app/app (contem templates/, static/)
 APP_DIR = BASE_DIR
 LACTARE_APP_ROOT = BASE_DIR.parent  # .../lactare_app
+
+load_dotenv(LACTARE_APP_ROOT / ".env")
 
 DB_PATH = LACTARE_APP_ROOT / "data" / "blhs.db"
 
