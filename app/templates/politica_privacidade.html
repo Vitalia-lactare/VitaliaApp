@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Política de Privacidade{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <div class="container">
+    <h1>Política de Privacidade</h1>
+    <p>Como o {{ APP_NAME }} coleta, usa e protege os dados de doadoras cadastradas na plataforma.</p>
+  </div>
+</section>
+
+<section class="container narrow accordion">
+  <details open>
+    <summary>Quais dados coletamos</summary>
+    <ul>
+      <li><strong>Dados de contato:</strong> nome, e-mail, telefone/WhatsApp, CEP, cidade e estado.</li>
+      <li><strong>Dados de saúde (dado sensível, art. 5º, II da LGPD):</strong> respostas do quiz de
+          triagem — se está amamentando, idade aproximada do bebê, uso de medicamentos, tabagismo e
+          exames recentes.</li>
+      <li><strong>Dados de uso:</strong> eventos de navegação no portal (ex: quais etapas do
+          cadastro foram concluídas), usados apenas para melhorar o funil de doação.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Para que usamos seus dados</summary>
+    <ul>
+      <li>Conectar você ao banco de leite humano mais próximo, pelo seu CEP/cidade.</li>
+      <li>Permitir que a equipe do banco de leite avalie sua triagem e entre em contato para agendar
+          a coleta.</li>
+      <li>Registrar sua avaliação sobre a experiência, quando você optar por enviá-la.</li>
+    </ul>
+    <p>Não usamos seus dados para fins comerciais, publicidade ou qualquer finalidade fora da
+       doação de leite materno.</p>
+  </details>
+
+  <details>
+    <summary>Com quem compartilhamos</summary>
+    <p>Seus dados são compartilhados apenas com o banco de leite humano ao qual você é conectada,
+       para viabilizar o agendamento da coleta. Não vendemos nem compartilhamos seus dados com
+       terceiros para outras finalidades.</p>
+  </details>
+
+  <details>
+    <summary>Por quanto tempo guardamos</summary>
+    <p>Mantemos seus dados enquanto durar seu vínculo com o banco de leite ou até você solicitar a
+       exclusão. Dados de triagem e cadastro podem ser mantidos por período adicional quando
+       exigido por obrigação legal ou regulatória da rede de bancos de leite.</p>
+  </details>
+
+  <details>
+    <summary>Seus direitos</summary>
+    <p>Conforme a Lei Geral de Proteção de Dados (Lei 13.709/2018), você pode a qualquer momento
+       solicitar acesso, correção ou exclusão dos seus dados, além de revogar os consentimentos
+       dados no cadastro. Para isso, entre em contato diretamente com o banco de leite ao qual
+       você foi conectada.</p>
+  </details>
+</section>
+
+{% endblock %}

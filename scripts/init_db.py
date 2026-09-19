@@ -92,6 +92,9 @@ DOADORA_NEW_COLUMNS = {
     "agendamento_periodo": "TEXT",
     "feedback_nota": "INTEGER",
     "feedback_comentario": "TEXT",
+    "consent_saude": "INTEGER NOT NULL DEFAULT 0",
+    "consent_contato": "INTEGER NOT NULL DEFAULT 0",
+    "consent_termos": "INTEGER NOT NULL DEFAULT 0",
 }
 
 

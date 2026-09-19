@@ -259,6 +259,14 @@
         return;
       }
 
+      const consentSaude = fd.get("consent_saude") === "on";
+      const consentTermos = fd.get("consent_termos") === "on";
+      if (!consentSaude || !consentTermos) {
+        cadFeedback.textContent = "É preciso aceitar os consentimentos obrigatórios para concluir o cadastro.";
+        cadFeedback.className = "form-feedback error";
+        return;
+      }
+
       const payload = {
         sessao_id: state.sessaoId,
         nome: fd.get("nome"),
@@ -271,6 +279,9 @@
         ja_doou_antes: state.respostas.ja_doou_antes === true,
         mensagem: fd.get("mensagem") || null,
         banco_leite_id: state.cadastro.bancoEncontrado ? state.cadastro.bancoEncontrado.id : null,
+        consent_saude: consentSaude,
+        consent_contato: fd.get("consent_contato") === "on",
+        consent_termos: consentTermos,
       };
 
       cadFeedback.textContent = "Enviando...";

@@ -34,3 +34,8 @@ def cada_gota_conta(request: Request):
 def localizador(request: Request, db: sqlite3.Connection = Depends(get_db)):
     ctx = {"request": request, "estados": repo.distinct_estados(db)}
     return templates.TemplateResponse(request, "localizador.html", ctx)
+
+
+@router.get("/politica-de-privacidade")
+def politica_privacidade(request: Request):
+    return templates.TemplateResponse(request, "politica_privacidade.html", {})

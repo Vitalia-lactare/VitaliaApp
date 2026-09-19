@@ -54,12 +54,29 @@
       <textarea id="cad-mensagem" name="mensagem" rows="2"></textarea>
     </div>
 
-    <div class="form-row form-row-checkbox">
-      <label>
-        <input type="checkbox" id="cad-lgpd" name="lgpd" required>
-        Autorizo o uso dos meus dados exclusivamente para me conectar a um banco de
-        leite humano, conforme a LGPD.
-      </label>
+    <div class="consent-group">
+      <div class="form-row form-row-checkbox">
+        <label>
+          <input type="checkbox" id="cad-consent-saude" name="consent_saude" required>
+          Consinto com a coleta dos meus dados de saúde (triagem) para fins exclusivos de
+          avaliação pelo banco de leite.
+        </label>
+      </div>
+      <div class="form-row form-row-checkbox">
+        <label>
+          <input type="checkbox" id="cad-consent-contato" name="consent_contato">
+          Aceito que a equipe do {{ APP_NAME }} entre em contato via WhatsApp/e-mail para
+          agendar a coleta.
+        </label>
+      </div>
+      <div class="form-row form-row-checkbox">
+        <label>
+          <input type="checkbox" id="cad-consent-termos" name="consent_termos" required>
+          Concordo com os
+          <a href="/politica-de-privacidade" target="_blank" rel="noopener">Termos de Uso e
+          Política de Privacidade</a>.
+        </label>
+      </div>
     </div>
 
     <button type="submit" class="btn btn-primary btn-block">Concluir cadastro</button>

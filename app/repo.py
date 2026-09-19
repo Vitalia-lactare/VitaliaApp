@@ -339,10 +339,12 @@ def insert_doadora_portal(conn: sqlite3.Connection, data: dict) -> int:
         """
         INSERT INTO doadoras
             (nome, email, telefone, cidade, uf, bebe_nascimento, ja_doou_antes,
-             mensagem, banco_leite_id, status, cep, sessao_id, triagem_id)
+             mensagem, banco_leite_id, status, cep, sessao_id, triagem_id,
+             consent_saude, consent_contato, consent_termos)
         VALUES
             (:nome, :email, :telefone, :cidade, :uf, :bebe_nascimento, :ja_doou_antes,
-             :mensagem, :banco_leite_id, 'novo', :cep, :sessao_id, :triagem_id)
+             :mensagem, :banco_leite_id, 'novo', :cep, :sessao_id, :triagem_id,
+             :consent_saude, :consent_contato, :consent_termos)
         """,
         data,
     )

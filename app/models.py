@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Literal, Optional
 
-from pydantic import BaseModel, EmailStr, Field, constr
+from pydantic import BaseModel, EmailStr, Field, constr, field_validator
 
 
 class DoadoraIn(BaseModel):
@@ -55,6 +55,16 @@ class EventoIn(BaseModel):
 class CadastroPortalIn(DoadoraIn):
     sessao_id: constr(min_length=8)
     cep: constr(min_length=8, max_length=9)
+    consent_saude: bool
+    consent_contato: bool = False
+    consent_termos: bool
+
+    @field_validator("consent_saude", "consent_termos")
+    @classmethod
+    def _consentimento_obrigatorio(cls, value: bool) -> bool:
+        if not value:
+            raise ValueError("Este consentimento é obrigatório para concluir o cadastro.")
+        return value
 
 
 class AgendamentoIn(BaseModel):
