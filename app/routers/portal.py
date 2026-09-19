@@ -22,7 +22,7 @@ EVENTOS_CONHECIDOS = [
 ]
 
 
-@router.get("/")
+@router.get("/doar")
 def portal_wizard(request: Request, db: sqlite3.Connection = Depends(get_db)):
     ctx = {
         "request": request,

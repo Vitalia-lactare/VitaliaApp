@@ -1,15 +1,16 @@
-const CACHE_NAME = "vitalia-shell-v2";
+const CACHE_NAME = "vitalia-shell-v3";
 
 const APP_SHELL = [
   "/",
+  "/doar",
   "/campanhas",
   "/cada-gota-conta",
-  "/seja-doadora",
   "/localizador",
   "/static/css/style.css",
   "/static/js/localizador.js",
   "/static/js/mapa.js",
-  "/static/js/doadora.js",
+  "/static/js/portal.js",
+  "/static/js/hero-carousel.js",
   "/static/js/pwa-register.js",
   "/static/manifest.json",
   "/static/icons/icon-192.png",
