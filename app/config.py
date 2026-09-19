@@ -10,6 +10,7 @@ LACTARE_APP_ROOT = BASE_DIR.parent  # .../lactare_app
 load_dotenv(LACTARE_APP_ROOT / ".env")
 
 DB_PATH = LACTARE_APP_ROOT / "data" / "blhs.db"
+GEOCODE_CACHE_PATH = LACTARE_APP_ROOT / "data" / "cidades_geo.json"
 
 APP_NAME = "Vitalia"
 APP_TAGLINE = "Cada gota conta para salvar uma vida"

@@ -1,3 +1,4 @@
+import json
 import sqlite3
 from typing import Optional
 
@@ -5,6 +6,7 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
 from .. import repo
+from ..config import GEOCODE_CACHE_PATH
 from ..db import get_db
 from ..models import ChatIn, ContatoIn
 from ..services import chat as chat_service
@@ -36,6 +38,42 @@ def api_estados(db: sqlite3.Connection = Depends(get_db)):
 @router.get("/campanhas")
 def api_campanhas(db: sqlite3.Connection = Depends(get_db)):
     return {"campanhas": repo.list_campanhas_ativas(db)}
+
+
+@router.get("/mapa-bancos")
+def api_mapa_bancos(
+    uf: Optional[str] = None,
+    cidade: Optional[str] = None,
+    categoria: Optional[str] = None,
+    db: sqlite3.Connection = Depends(get_db),
+):
+    """Pontos para o mapa do localizador: um marcador por cidade, com a
+    contagem e os nomes dos bancos/postos naquela cidade. Aceita os mesmos
+    filtros de /api/localizador para refletir a busca em tempo real. As
+    coordenadas vem de um cache geocodificado offline
+    (scripts/geocode_cidades.py) — cidades ainda nao geocodificadas ficam de
+    fora."""
+    if GEOCODE_CACHE_PATH.exists():
+        geo_cache = json.loads(GEOCODE_CACHE_PATH.read_text(encoding="utf-8"))
+    else:
+        geo_cache = {}
+
+    pontos = []
+    for grupo in repo.bancos_agrupados_por_cidade(db, uf=uf, cidade=cidade, categoria=categoria):
+        coords = geo_cache.get(f"{grupo['cidade']}|{grupo['uf']}")
+        if not coords:
+            continue
+        pontos.append({
+            "cidade": grupo["cidade"],
+            "uf": grupo["uf"],
+            "estado": grupo["estado"],
+            "total": grupo["total"],
+            "nomes": grupo["nomes"][:5],
+            "lat": coords["lat"],
+            "lng": coords["lng"],
+        })
+
+    return {"pontos": pontos}
 
 
 @router.post("/contatos", status_code=201)

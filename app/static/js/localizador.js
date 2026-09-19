@@ -5,6 +5,20 @@
   const ufSelect = document.getElementById("f-uf");
   const cidadeInput = document.getElementById("f-cidade");
   const cidadeList = document.getElementById("f-cidade-sugestoes");
+  const categoriaSelect = document.getElementById("f-categoria");
+
+  function refreshMapa() {
+    window.mapaBancos?.refresh(currentParams());
+  }
+
+  function debounce(fn, delay) {
+    let timer = null;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(...args), delay);
+    };
+  }
+  const refreshMapaDebounced = debounce(refreshMapa, 300);
 
   function escapeHtml(str) {
     return (str ?? "").replace(/[&<>"']/g, (c) => ({
@@ -76,7 +90,7 @@
     return {
       uf: ufSelect.value,
       cidade: cidadeInput.value,
-      categoria: document.getElementById("f-categoria").value,
+      categoria: categoriaSelect.value,
     };
   }
 
@@ -84,7 +98,10 @@
     e.preventDefault();
     closeSuggestions();
     search(currentParams());
+    refreshMapa();
   });
+
+  categoriaSelect.addEventListener("change", refreshMapa);
 
   // ---- Autocomplete de cidade ----
   let cidadesCache = [];
@@ -152,6 +169,7 @@
 
   cidadeInput.addEventListener("input", () => {
     renderSuggestions(cidadeInput.value);
+    refreshMapaDebounced();
   });
 
   cidadeInput.addEventListener("focus", () => {
@@ -173,6 +191,7 @@
         e.preventDefault();
         cidadeInput.value = items[activeIndex].dataset.value;
         closeSuggestions();
+        refreshMapa();
       }
     } else if (e.key === "Escape") {
       closeSuggestions();
@@ -185,6 +204,7 @@
     cidadeInput.value = li.dataset.value;
     closeSuggestions();
     search(currentParams());
+    refreshMapa();
   });
 
   document.addEventListener("click", (e) => {
@@ -195,6 +215,7 @@
     cidadeInput.value = "";
     closeSuggestions();
     loadCidades(ufSelect.value);
+    refreshMapa();
   });
 
   // ---- Inicialização ----
@@ -209,10 +230,11 @@
     hasInitial = true;
   }
   if (initial.get("categoria")) {
-    document.getElementById("f-categoria").value = initial.get("categoria");
+    categoriaSelect.value = initial.get("categoria");
     hasInitial = true;
   }
 
   loadCidades(ufSelect.value);
   search(hasInitial ? currentParams() : {});
+  if (hasInitial) refreshMapa();
 })();

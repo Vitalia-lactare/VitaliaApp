@@ -120,6 +120,18 @@ a:hover { text-decoration: underline; }
 .hero-art { flex: 0 1 220px; }
 .hero-art svg { width: 100%; height: auto; }
 
+/* Mapa (localizador) */
+.map-container {
+  height: 420px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: var(--color-bg-soft);
+  margin: 1rem 0 1.2rem;
+}
+.map-popup { font-size: 0.85rem; line-height: 1.4; }
+.map-popup strong { color: var(--color-primary-dark); }
+
 /* Stats */
 .stats { padding: 2.5rem 0; }
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; }

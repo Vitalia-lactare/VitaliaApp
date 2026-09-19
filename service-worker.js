@@ -1,4 +1,4 @@
-const CACHE_NAME = "vitalia-shell-v1";
+const CACHE_NAME = "vitalia-shell-v2";
 
 const APP_SHELL = [
   "/",
@@ -8,6 +8,7 @@ const APP_SHELL = [
   "/localizador",
   "/static/css/style.css",
   "/static/js/localizador.js",
+  "/static/js/mapa.js",
   "/static/js/doadora.js",
   "/static/js/pwa-register.js",
   "/static/manifest.json",

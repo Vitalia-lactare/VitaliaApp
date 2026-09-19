@@ -11,6 +11,10 @@
 </section>
 
 <section class="container">
+  <div id="mapa-bancos" class="map-container" data-endpoint="/api/mapa-bancos"></div>
+</section>
+
+<section class="container">
   <form id="form-localizador" class="localizador-form">
     <div class="form-row">
       <label for="f-uf">Estado</label>
@@ -44,5 +48,8 @@
 
 {% endblock %}
 {% block scripts %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/static/js/mapa.js"></script>
 <script src="/static/js/localizador.js"></script>
 {% endblock %}

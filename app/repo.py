@@ -118,6 +118,41 @@ def count_estados(conn: sqlite3.Connection) -> int:
     ).fetchone()[0]
 
 
+def bancos_agrupados_por_cidade(
+    conn: sqlite3.Connection,
+    uf: Optional[str] = None,
+    cidade: Optional[str] = None,
+    categoria: Optional[str] = None,
+) -> list[dict]:
+    clauses = ["cidade IS NOT NULL", "uf IS NOT NULL"]
+    params: list = []
+
+    if uf:
+        clauses.append("uf = ?")
+        params.append(uf.strip().upper())
+    if cidade:
+        clauses.append("LOWER(cidade) LIKE LOWER(?)")
+        params.append(f"%{cidade.strip()}%")
+    if categoria:
+        clauses.append("categoria = ?")
+        params.append(categoria.strip())
+
+    sql = f"""
+        SELECT cidade, uf, estado, COUNT(*) AS total, GROUP_CONCAT(nome, '||') AS nomes
+        FROM bancos_de_leite
+        WHERE {' AND '.join(clauses)}
+        GROUP BY cidade, uf
+        ORDER BY cidade
+    """
+    rows = conn.execute(sql, params).fetchall()
+    resultado = []
+    for r in rows:
+        d = dict(r)
+        d["nomes"] = d["nomes"].split("||") if d["nomes"] else []
+        resultado.append(d)
+    return resultado
+
+
 def match_banco_leite_id(
     conn: sqlite3.Connection, uf: str, cidade: str, uf_fallback: bool = True
 ) -> Optional[int]:
